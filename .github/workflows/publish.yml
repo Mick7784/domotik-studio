@@ -23,7 +23,7 @@ jobs:
           docker build -t site-test .
           docker run -d --name site-test --read-only --tmpfs /tmp:rw,noexec,nosuid,size=32m,mode=1777 --cap-drop ALL --security-opt no-new-privileges:true -p 127.0.0.1:18080:8080 site-test
           trap 'docker logs site-test; docker rm -f site-test' EXIT
-          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://127.0.0.1:18080/healthz
+          curl --retry 15 --retry-all-errors --retry-delay 1 -fsS http://127.0.0.1:18080/healthz
           for path in / /style.css /assets/room.webp /assets/dk.png; do
             curl -fsS "http://127.0.0.1:18080$path" -o /dev/null
           done
