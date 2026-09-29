@@ -1,0 +1,17 @@
+services:
+  site:
+    image: ghcr.io/mick7784/domotik-studio:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    networks:
+      proxy:
+        aliases:
+          - ${SITE_ALIAS:-domotik-site}
+networks:
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:?Set PROXY_NETWORK}
